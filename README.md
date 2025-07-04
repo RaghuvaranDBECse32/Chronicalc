@@ -23,8 +23,7 @@
 
 ## 🌐 Live Demo
 
-🔗 [https://chronicalc.onrender.com](https://chronicalc.onrender.com)
-
+🔗 https://raghuvarandbecse32.github.io/Chronicalc/
 ---
 
 ## 🛠 Tech Stack
