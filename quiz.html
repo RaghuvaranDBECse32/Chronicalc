@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Challenge: Charles Boyle and Orreries</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-image: url('4.png'); /* Replace with your desired background image URL */
+            background-size: cover;
+            background-position: center;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+        #quiz-container {
+            display: none;
+            margin: auto;
+            max-width: 600px;
+            background-color: rgba(0, 0, 0, 0.7); /* Transparent background for readability */
+            padding: 20px;
+            border-radius: 10px;
+        }
+        #timer {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .question {
+            margin: 20px 0;
+        }
+        .option {
+            display: none; /* Initially hidden */
+            margin: 10px 0;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Quiz Challenge: Charles Boyle and Orreries</h1>
+    <button id="start-button" class="button">Start Quiz</button>
+
+    <div id="quiz-container">
+        <div id="timer">90 seconds left</div>
+        <div id="question-container"></div>
+        <button id="next-button" class="button" style="display: none;">Next Question</button>
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        const questions = [
+  {
+    question: "What does UFO stand for?",
+    options: [
+      "Uncharted Foreign Object",
+      "Universal Flying Object",
+      "Unseen Floating Object",
+      "Unidentified Flying Object"
+    ],
+    correct: "Unidentified Flying Object",
+    reason: "UFO stands for Unidentified Flying Object, which refers to any aerial phenomenon that has not been identified."
+  },
+  {
+    question: "When is the official World UFO Day celebrated every year?",
+    options: ["January 30th", "July 2nd", "August 23rd", "December 1st"],
+    correct: "July 2nd",
+    reason: "World UFO Day is celebrated on July 2nd to commemorate the Roswell Incident of 1947."
+  },
+  {
+    question: "What year was the Roswell incident?",
+    options: ["1931", "1937", "1941", "1947"],
+    correct: "1947",
+    reason: "The Roswell incident occurred in 1947 and is one of the most famous UFO-related events."
+  },
+  {
+    question: "Who directed the 1977 film 'Close Encounters of the Third Kind'?",
+    options: ["Steven Spielberg", "George Lucas", "Ridley Scott", "Alfred Hitchcock"],
+    correct: "Steven Spielberg",
+    reason: "Steven Spielberg directed the iconic UFO-themed movie in 1977."
+  },
+  {
+    question: "The first widely reported UFO sighting in the U.S. is known as:",
+    options: [
+      "The Roswell Incident",
+      "The Phoenix Lights",
+      "The Rendlesham Forest Incident",
+      "The Battle of Los Angeles"
+    ],
+    correct: "The Roswell Incident",
+    reason: "The Roswell Incident is one of the first and most widely publicized UFO sightings."
+  },
+  {
+    question: "In which U.S. state is the infamous Area 51 located?",
+    options: ["California", "Ohio", "New Mexico", "Nevada"],
+    correct: "Nevada",
+    reason: "Area 51 is located in Nevada and is shrouded in secrecy and UFO lore."
+  },
+  {
+    question: "Project Blue Book was a series of studies of UFOs conducted by:",
+    options: [
+      "The Federal Bureau of Investigation",
+      "The U.S. Air Force",
+      "NASA",
+      "The Central Intelligence Agency"
+    ],
+    correct: "The U.S. Air Force",
+    reason: "Project Blue Book was run by the U.S. Air Force to investigate UFO reports."
+  },
+  {
+    question: "Who wrote 'The War of the Worlds'?",
+    options: ["Arthur C. Clarke", "Isaac Asimov", "H.G. Wells", "Philip K. Dick"],
+    correct: "H.G. Wells",
+    reason: "H.G. Wells authored 'The War of the Worlds', a classic alien invasion story."
+  },
+  {
+    question: "The term 'Flying Saucer' was first coined after a sighting by:",
+    options: ["Kenneth Arnold", "Jesse Marcel", "George Adamski", "J. Allen Hynek"],
+    correct: "Kenneth Arnold",
+    reason: "Kenneth Arnold described objects flying like 'saucers' in 1947, coining the term."
+  },
+  {
+    question: "Which is the UFO hotspot state in the USA?",
+    options: ["Arizona", "New Mexico", "Nevada", "California"],
+    correct: "Nevada",
+    reason: "Nevada is the UFO hotspot due to Area 51 and high number of sightings."
+  }
+];
+
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 90;
+
+        document.getElementById('start-button').addEventListener('click', startQuiz);
+
+        function startQuiz() {
+            document.getElementById('start-button').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            displayQuestion();
+            startTimer();
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').innerText = `${timeLeft} seconds left`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    showResult();
+                }
+            }, 1000);
+        }
+
+        function displayQuestion() {
+            const questionElement = document.getElementById('question-container');
+            questionElement.innerHTML = '';
+            const currentQuestion = questions[currentQuestionIndex];
+            const questionTitle = document.createElement('h2');
+            questionTitle.innerText = currentQuestion.question;
+            questionElement.appendChild(questionTitle);
+
+            currentQuestion.options.forEach((option, index) => {
+                const optionButton = document.createElement('button');
+                optionButton.className = 'option button';
+                optionButton.innerText = option;
+                optionButton.addEventListener('click', () => handleOptionClick(option));
+                questionElement.appendChild(optionButton);
+                optionButton.style.display = 'none'; // Hide initially
+                setTimeout(() => {
+                    optionButton.style.display = 'inline-block'; // Show option after a delay
+                }, index * 1000); // Show options one by one
+            });
+
+            document.getElementById('next-button').style.display = 'none'; // Hide next button
+        }
+
+        function handleOptionClick(selectedOption) {
+            const currentQuestion = questions[currentQuestionIndex];
+            const resultElement = document.getElementById('result');
+            if (selectedOption === currentQuestion.correct) {
+                score++;
+                resultElement.innerHTML = `<p style="color: green;">Correct! ${currentQuestion.reason}</p>`;
+            } else {
+                resultElement.innerHTML = `<p style="color: red;">Wrong! The correct answer is: ${currentQuestion.correct}. ${currentQuestion.reason}</p>`;
+            }
+            document.getElementById('next-button').style.display = 'block'; // Show next button
+            Array.from(document.querySelectorAll('.option')).forEach(button => {
+                button.disabled = true; // Disable all option buttons
+            });
+        }
+
+        document.getElementById('next-button').addEventListener('click', () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                displayQuestion();
+                document.getElementById('result').innerHTML = ''; // Clear previous result
+            } else {
+                clearInterval(timer);
+                showResult();
+            }
+        });
+
+        function showResult() {
+            const resultElement = document.getElementById('result');
+            resultElement.innerHTML = `<h2>Your score: ${score} out of ${questions.length}</h2>`;
+            document.getElementById('quiz-container').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
